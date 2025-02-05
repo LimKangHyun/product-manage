@@ -1,4 +1,4 @@
-package hello.product_manage.domain;
+package hello.product_manage.domain.item;
 
 import org.springframework.stereotype.Repository;
 

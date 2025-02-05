@@ -13,7 +13,7 @@ public class ItemSaveForm {
     private String itemName;
 
     @NotNull
-    @Range(min = 1000, max = 10000)
+    @Range(min = 1000, max = 5000000)
     private Integer price;
 
     @NotNull

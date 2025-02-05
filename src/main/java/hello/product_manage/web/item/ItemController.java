@@ -1,11 +1,10 @@
 package hello.product_manage.web.item;
 
-import hello.product_manage.domain.Item;
-import hello.product_manage.domain.ItemRepository;
+import hello.product_manage.domain.item.Item;
+import hello.product_manage.domain.item.ItemRepository;
 import hello.product_manage.web.item.form.ItemSaveForm;
 import hello.product_manage.web.item.form.ItemUpdateForm;
 import jakarta.validation.Valid;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -36,8 +35,7 @@ public class ItemController {
     }
 
     @GetMapping("/add")
-    public String addForm(Model model) {
-        model.addAttribute("item", new Item());
+    public String addForm(@ModelAttribute("item") Item item) {
         return "items/addForm";
     }
 
@@ -62,7 +60,7 @@ public class ItemController {
     }
 
     @PostMapping("/{itemId}/edit")
-    public String edit(@PathVariable Long itemId, @ModelAttribute("item") ItemUpdateForm form) {
+    public String edit(@Valid @PathVariable Long itemId, @ModelAttribute("item") ItemUpdateForm form) {
 
         Item itemParam = new Item();
         itemParam.setItemName(form.getItemName());
