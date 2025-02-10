@@ -2,6 +2,7 @@ package hello.product_manage.web;
 
 import hello.product_manage.domain.member.Member;
 import hello.product_manage.domain.member.MemberRepository;
+import hello.product_manage.web.argumentResolver.Login;
 import hello.product_manage.web.session.SessionManager;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -51,7 +52,7 @@ public class HomeController {
         return "loginHome";
     }
 
-    @GetMapping("/")
+//    @GetMapping("/")
     public String homeLoginV3(HttpServletRequest request, Model model) {
 
         // 세션이 없으면 home
@@ -61,6 +62,16 @@ public class HomeController {
         }
 
         Member loginMember = (Member) session.getAttribute(SessionConst.LOGIN_MEMBER);
+        if (loginMember == null) {
+            return "home";
+        }
+
+        model.addAttribute("member", loginMember);
+        return "loginHome";
+    }
+
+    @GetMapping("/")
+    public String homeLoginV3ArgumentResolver(@Login Member loginMember, Model model) {
         if (loginMember == null) {
             return "home";
         }
