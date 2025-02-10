@@ -6,13 +6,17 @@ import hello.product_manage.web.item.form.ItemSaveForm;
 import hello.product_manage.web.item.form.ItemUpdateForm;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
+@Slf4j
 @RequestMapping("/items")
 @Controller
 @RequiredArgsConstructor
@@ -40,7 +44,20 @@ public class ItemController {
     }
 
     @PostMapping("/add")
-    public String addItem(@Valid @ModelAttribute("item") ItemSaveForm form, RedirectAttributes redirectAttributes) {
+    public String addItem(@Validated @ModelAttribute("item") ItemSaveForm form, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+        // 특정 필드 예외가 아닌 전체 예외
+        if (form.getPrice() != null && form.getQuantity() != null) {
+            int resultPrice = form.getPrice() * form.getQuantity();
+            if(resultPrice < 10000) {
+                bindingResult.reject("totalPriceMin", new Object[]{10000, resultPrice}, null);
+            }
+        }
+
+        if (bindingResult.hasErrors()) {
+            log.info("errors={}", bindingResult);
+            return "items/addForm";
+        }
+
         Item item = new Item();
 
         item.setItemName(form.getItemName());
@@ -60,7 +77,19 @@ public class ItemController {
     }
 
     @PostMapping("/{itemId}/edit")
-    public String edit(@Valid @PathVariable Long itemId, @ModelAttribute("item") ItemUpdateForm form) {
+    public String edit(@Valid @PathVariable Long itemId, @ModelAttribute("item") ItemUpdateForm form, BindingResult bindingResult) {
+
+        //특정 필드 예외가 아닌 전체 예외
+        if (form.getPrice() != null && form.getQuantity() != null) {
+            int resultPrice = form.getPrice() * form.getQuantity();
+            if (resultPrice < 10000) {
+                bindingResult.reject("totalPriceMin", new Object[]{10000, resultPrice}, null);
+            }
+        }
+        if (bindingResult.hasErrors()) {
+            log.info("errors={}", bindingResult);
+            return "items/editForm";
+        }
 
         Item itemParam = new Item();
         itemParam.setItemName(form.getItemName());
