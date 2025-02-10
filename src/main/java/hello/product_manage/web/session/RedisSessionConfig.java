@@ -1,5 +1,6 @@
 package hello.product_manage.web.session;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -7,8 +8,9 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
+@Slf4j
 @Configuration
-@EnableRedisHttpSession(maxInactiveIntervalInSeconds = 60) // 1분
+@EnableRedisHttpSession(maxInactiveIntervalInSeconds = 600) // 1분
 public class RedisSessionConfig {
 
     @Bean
